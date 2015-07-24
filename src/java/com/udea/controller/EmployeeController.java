@@ -31,9 +31,24 @@ public class EmployeeController {
     @Inject
     @Normal
     private SalaryCalculator salario;
+    @Inject
+    @ExtraHours
+    private SalaryCalculator salarioExtra;
+    @Inject
+    @Comission
+    private SalaryCalculator salarioComis;
 
     private List<Double> salaries;
     private List<Employee> employees;
+    private String salaryType;
+
+    public String getSalaryType() {
+        return salaryType;
+    }
+
+    public void setSalaryType(String salaryType) {
+        this.salaryType = salaryType;
+    }
 
     public List<Double> getSalaries() {
         return salaries;
@@ -64,7 +79,17 @@ public class EmployeeController {
 
     public Double processSalaryById(String id) {
         Employee employee = employeeFacade.find(id);
-        return salario.calculateSalary(employee);
+        switch (getSalaryType()) {
+            case "normal":
+                return salario.calculateSalary(employee);
+            case "extra":
+                return salarioExtra.calculateSalary(employee);
+            case "comission":
+                return salarioComis.calculateSalary(employee);
+            default:
+                return salario.calculateSalary(employee);
+        }
+
     }
 
 }
